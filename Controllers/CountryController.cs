@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ListingApi.Data.Dto;
 using ListingApi.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,6 +25,7 @@ namespace ListingApi.Controllers
         }
 
         //Get All 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetCountries()
         {

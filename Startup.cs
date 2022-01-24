@@ -38,9 +38,12 @@ namespace ListingApi
             //Auth
             services.AddAuthentication();
             services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
 
             //Adding unit of work
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthmanager, Authmanager>();
+
 
             //AddCors 
             services.AddCors(options =>
@@ -74,6 +77,8 @@ namespace ListingApi
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

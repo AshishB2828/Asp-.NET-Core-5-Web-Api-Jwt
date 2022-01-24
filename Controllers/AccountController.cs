@@ -19,15 +19,16 @@ namespace ListingApi.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<ApiUser> _userManager;
-        //private readonly SignInManager<ApiUser> _signInManager;
+        private readonly IAuthmanager _authmanager;
 
         public AccountController(IUnitOfWork unitOfWork, IMapper mapper,
-                                UserManager<ApiUser> userManager
+                                UserManager<ApiUser> userManager,
+                                IAuthmanager authmanager
                                )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            //_signInManager = signInManager;
+            _authmanager = authmanager;
             _userManager = userManager;
         }
 
@@ -60,27 +61,28 @@ namespace ListingApi.Controllers
             }
         }
 
-
         //Login
-        //[HttpPost]
-        //[Route("login")]
-        //public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    try
-        //    {
-        //        var result = await _signInManager.PasswordSignInAsync(loginUserDto.Email, loginUserDto.password, false, false);
-        //        if (!result.Succeeded)
-        //        {
-        //            return BadRequest("Wrong Password or Email !");
-        //        }
-        //        return Ok("Login Success");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Internal Server Error. Please Try Again Later. =>LOGIN");
-        //    }
-        //}
+       
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                var result = await _authmanager.ValidateUser(loginUserDto);
+                if (!result)
+                {
+                    return BadRequest("Wrong Password or Email !");
+                }
+                return Ok(new { Token = await _authmanager.CreateToken() });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+                throw ex;
+            }
+        }
 
 
 
