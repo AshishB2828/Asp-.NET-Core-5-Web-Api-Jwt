@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ListingApi.Config.Entity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ListingApi.Data
 {
-    public class DatabaseContext:DbContext
+    public class DatabaseContext:IdentityDbContext<ApiUser>
     {
 
 
@@ -20,6 +22,10 @@ namespace ListingApi.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new RoleConfiguration()); //alternate way for seeding data
+
+            //seeding data  
             builder.Entity<Country>().HasData(
                 new Country
                 {

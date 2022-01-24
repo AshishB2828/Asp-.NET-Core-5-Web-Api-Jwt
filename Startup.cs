@@ -34,7 +34,11 @@ namespace ListingApi
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default"))
             );
-            
+
+            //Auth
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+
             //Adding unit of work
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
