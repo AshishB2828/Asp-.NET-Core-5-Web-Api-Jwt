@@ -1,3 +1,4 @@
+using ListingApi.Config;
 using ListingApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,7 +39,8 @@ namespace ListingApi
             {
                 options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
+            //adding Automapper
+            services.AddAutoMapper(typeof(MapperInitalizer));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ListingApi", Version = "v1" });
