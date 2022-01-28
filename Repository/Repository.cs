@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ListingApi.Repository
 {
@@ -84,6 +85,22 @@ namespace ListingApi.Repository
         {
             _db.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task<IPagedList<T>> GetAll( RequstParams param, List<string> includes = null)
+        {
+            IQueryable<T> query = _db;
+
+            if(includes!= null)
+            {
+                foreach (var props in includes)
+                {
+                    query = query.Include(props);
+                }
+            }
+            
+            return await query.AsNoTracking().ToPagedListAsync(param.PageNumber, param.PageSize);
+
         }
     }
 }

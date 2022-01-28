@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ListingApi.Data;
 using ListingApi.Data.Dto;
 using ListingApi.IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -27,11 +28,11 @@ namespace ListingApi.Controllers
         //Get All 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetCountries()
+        public async Task<IActionResult> GetCountries([FromQuery]RequstParams param)
         {
             try
             {
-                var countries = await _unitOfWork.Countries.GetAll();
+                var countries = await _unitOfWork.Countries.GetAll(param);
                 var results = _mapper.Map<IList<CountryDto>>(countries);
                 return Ok(results);
             }
