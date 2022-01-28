@@ -1,5 +1,8 @@
 ﻿using ListingApi.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +47,27 @@ namespace ListingApi
                     ValidIssuer = jwtSettings.GetSection("Issuer").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                 };
+            });
+        }
+
+        public static void  ConfigureExceptionHandler(this IApplicationBuilder app)
+        {
+            app.UseExceptionHandler(error =>
+            {
+                error.Run(async context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    context.Response.ContentType = "application/json";
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if(contextFeature != null)
+                    {
+                        await context.Response.WriteAsync(new ErrorModel
+                        {
+                            StatusCode = StatusCodes.Status500InternalServerError,
+                            Message = "Internal Server Error, Please Try Again"
+                        }.ToString());
+                    }
+                });
             });
         }
     }

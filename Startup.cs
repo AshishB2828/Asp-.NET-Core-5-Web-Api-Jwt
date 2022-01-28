@@ -72,6 +72,9 @@ namespace ListingApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ListingApi v1"));
             }
 
+            //custom error handler
+            app.ConfigureExceptionHandler();
+
             app.UseHttpsRedirection();
 
             app.UseCors("CorsPolicy");

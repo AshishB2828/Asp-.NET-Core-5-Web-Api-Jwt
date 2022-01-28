@@ -30,31 +30,18 @@ namespace ListingApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCountries([FromQuery]RequstParams param)
         {
-            try
-            {
                 var countries = await _unitOfWork.Countries.GetAll(param);
                 var results = _mapper.Map<IList<CountryDto>>(countries);
                 return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCountry(int id)
         {
-            try
-            {
                 var country = await _unitOfWork.Countries.Get(q => q.Id == id, new List<string> { "Hotels" });
                 var result = _mapper.Map<CountryDto>(country);
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+           
         }
 
 

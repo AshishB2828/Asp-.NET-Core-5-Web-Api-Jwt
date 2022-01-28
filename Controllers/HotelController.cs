@@ -28,31 +28,21 @@ namespace ListingApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHotels()
         {
-            try
-            {
+            
                 var hotels = await _unitOfWork.Hotels.GetAll();
                 var results = _mapper.Map<IList<HotelDto>>(hotels);
                 return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+            
         }
 
         [HttpGet("{id:int}", Name= "GetHotel")]
         public async Task<IActionResult> GetHotel(int id)
         {
-            try
-            {
+           
                 var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id, new List<string> { "Country" });
                 var result = _mapper.Map<HotelDto>(hotel);
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+            
         }
 
         [Authorize(Roles = "User")]
@@ -64,18 +54,13 @@ namespace ListingApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
-            {
+            
                 var hotel = _mapper.Map<Hotel>(hotelDTO);
                 await _unitOfWork.Hotels.Insert(hotel);
                 await _unitOfWork.Save();
                 
                 return CreatedAtRoute("GetHotel", new { id = hotel.Id }, hotel);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+           
         }
 
         [Authorize]
@@ -87,24 +72,18 @@ namespace ListingApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
+           
+            var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id);
+            if (hotel == null)
             {
-                var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id);
-                if (hotel == null)
-                {
-                    return BadRequest("Submitted data is invalid");
-                }
+                return BadRequest("Submitted data is invalid");
+            }
 
                 _mapper.Map(hotelDTO, hotel);
                 _unitOfWork.Hotels.Update(hotel);
                 await _unitOfWork.Save();
 
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+                return NoContent();   
         }
 
         [Authorize]
@@ -116,24 +95,20 @@ namespace ListingApi.Controllers
                 return BadRequest();
             }
 
-            try
+           
+            var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id);
+            if (hotel == null)
             {
-                var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id);
-                if (hotel == null)
-                {
-                    return BadRequest("Submitted data is invalid");
-                }
+               return BadRequest("Submitted data is invalid");
+            }
 
                 await _unitOfWork.Hotels.Delete(id);
                 await _unitOfWork.Save();
 
                 return NoContent();
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
-            }
+           
         }
 
-    }
-}
+   }
+
