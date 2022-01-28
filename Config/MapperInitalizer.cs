@@ -18,6 +18,8 @@ namespace ListingApi.Config
             CreateMap<Hotel, HotelDto>().ReverseMap();
             CreateMap<Hotel, CreateHotelDto>().ReverseMap();
             CreateMap<ApiUser, UserDto>().ReverseMap();
+            CreateMap<Country, UpdateCountryDtO>().ReverseMap();
+            CreateMap<Hotel, UpdateHotelDto>().ReverseMap();
         }
     }
 }
