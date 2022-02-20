@@ -45,11 +45,11 @@ namespace ListingApi.Controllers
                 var result = await _userManager.CreateAsync(user, userDto.password);
                 if (!result.Succeeded)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(error.Code, error.Description);
-                    }
-                    return BadRequest(ModelState);
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(error.Code, error.Description);
+                        }
+                        return BadRequest(ModelState);
 
                 }
                 await _userManager.AddToRolesAsync(user, userDto.Roles);
